@@ -2,7 +2,6 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 export default defineConfig({
-  site: "https://sivasankaramalan.github.io",
   base: "/ecopilot",
   integrations: [
     starlight({
