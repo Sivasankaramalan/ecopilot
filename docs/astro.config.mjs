@@ -14,24 +14,24 @@ export default defineConfig({
         {
           label: "Getting Started",
           items: [
-            { label: "Quick Start", link: "/guides/quickstart" },
-            { label: "How It Works", link: "/guides/how-it-works" },
+            { label: "Quick Start", link: "guides/quickstart" },
+            { label: "How It Works", link: "guides/how-it-works" },
           ],
         },
         {
           label: "Tool Reference",
           items: [
-            { label: "Human-in-the-Loop", link: "/reference/hitl-tools" },
-            { label: "Prompt Hygiene", link: "/reference/hygiene-tools" },
-            { label: "Memory", link: "/reference/memory-tools" },
-            { label: "Model Guard", link: "/reference/model-guard" },
-            { label: "Savings Report", link: "/reference/savings-report" },
+            { label: "Human-in-the-Loop", link: "reference/hitl-tools" },
+            { label: "Prompt Hygiene", link: "reference/hygiene-tools" },
+            { label: "Memory", link: "reference/memory-tools" },
+            { label: "Model Guard", link: "reference/model-guard" },
+            { label: "Savings Report", link: "reference/savings-report" },
           ],
         },
         {
           label: "Savings Calculator",
           items: [
-            { label: "Token Savings Calculator", link: "/calculator" },
+            { label: "Token Savings Calculator", link: "calculator" },
           ],
         },
       ],
