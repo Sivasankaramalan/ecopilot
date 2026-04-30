@@ -2,12 +2,14 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 
 export default defineConfig({
+  site: "https://sivasankaramalan.github.io",
+  base: "/ecopilot",
   integrations: [
     starlight({
       title: "EcoPilot",
       description: "Stop burning Copilot premium requests. Human-in-the-loop MCP tools + prompt hygiene for VS Code.",
       social: {
-        github: "https://github.com/ecopilot/ecopilot",
+        github: "https://github.com/Sivasankaramalan/ecopilot",
       },
       sidebar: [
         {
