@@ -1,0 +1,82 @@
+---
+title: Memory Tools
+description: remember, recall, and forget — persistent key-value memory across user/workspace/session scopes.
+---
+
+Memory tools let Copilot store and retrieve facts so it never asks the same question twice.
+
+## Scopes
+
+| Scope | Persists | Backed by |
+|---|---|---|
+| `session` | In-memory — cleared on server restart | RAM |
+| `workspace` | Survives restarts, scoped to current project | `~/.ecopilot/memory.json` |
+| `user` | Survives restarts, shared across all projects | `~/.ecopilot/memory.json` |
+
+---
+
+## remember
+
+Save a key-value fact.
+
+```json
+{
+  "key": "preferred_language",
+  "value": "TypeScript",
+  "scope": "workspace"
+}
+```
+
+**Returns:** `{ success: true, key, scope, stored: true }`
+
+---
+
+## recall
+
+Retrieve a value by key. Omit `key` to list all stored keys in the scope.
+
+```json
+{ "key": "preferred_language", "scope": "workspace" }
+```
+
+**Returns:**
+```json
+{ "success": true, "key": "preferred_language", "scope": "workspace", "found": true, "value": "TypeScript", "saved_at": "2026-04-30T…" }
+```
+
+**List all keys:**
+```json
+{ "scope": "workspace" }
+```
+
+Returns `{ keys: [{ key, value, saved_at }], count }`.
+
+---
+
+## forget
+
+Delete a key from memory.
+
+```json
+{ "key": "preferred_language", "scope": "workspace" }
+```
+
+**Returns:** `{ success: true, key, scope, deleted: true }`
+
+---
+
+## Recommended pattern
+
+```
+1. recall(key="deployment_target", scope="workspace")
+   → found: false
+
+2. ask_user(prompt="Which environment?")
+   → "staging"
+
+3. remember(key="deployment_target", value="staging", scope="workspace")
+
+-- Next session --
+4. recall(key="deployment_target", scope="workspace")
+   → found: true, value: "staging"  ✅ no ask needed
+```

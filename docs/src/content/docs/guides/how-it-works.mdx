@@ -1,0 +1,68 @@
+---
+title: How It Works
+description: The core insight behind EcoPilot — why MCP tool calls cost zero premium requests.
+---
+
+## The premium request problem
+
+GitHub Copilot charges **premium requests** for every agent turn that involves reasoning. The multipliers (as of 2026):
+
+| Model | Multiplier |
+|---|---|
+| GPT-4o mini | 0.33× |
+| GPT-4o (standard) | 1× |
+| o3 / Claude Opus | 3× |
+
+An agent task like *"refactor UserController and ask me about each method"* can trigger **10–20 premium requests** — one per follow-up the agent types back into chat.
+
+## The fix: MCP tool calls are free
+
+Tool call responses do **not** consume premium requests. Only the initial user message does.
+
+EcoPilot replaces every agent follow-up with an MCP tool call:
+
+```
+Before:                              After:
+─────────────────────────────────    ─────────────────────────────────
+User message (1× premium)            User message (1× premium)
+  ↓                                    ↓
+Agent: "Which files?"                Agent calls: choose_many(...)
+  ↓                                    ↓ (free — tool response)
+User reply (1× premium)              User picks in QuickPick dialog
+  ↓                                    ↓ (free — tool response)
+Agent: "Confirm delete?"             Agent calls: confirm(...)
+  ↓                                    ↓ (free — tool response)
+User reply (1× premium)              User clicks Yes in dialog
+                                       ↓
+                                     Agent completes task
+─────────────────────────────────    ─────────────────────────────────
+3 premium requests                   1 premium request
+```
+
+## Prompt hygiene compounds savings
+
+Beyond HITL, EcoPilot's hygiene tools prevent expensive requests upfront:
+
+- `analyze_prompt` detects vague phrases and recommends the cheapest sufficient model
+- `tighten_prompt` rewrites verbose prompts to lean imperatives — fewer input tokens = faster, cheaper
+- `scope_check` catches "refactor the entire codebase" before it spawns 15 agent sub-calls
+- `suggest_model` warns when you have premium selected for a trivial task
+
+## Architecture
+
+```
+VS Code (MCP client)
+    │  stdio
+    ▼
+@ecopilot/mcp-server   ←── your mcp.json entry
+    │  WebSocket (127.0.0.1)
+    ▼
+ecopilot-vscode        ←── VS Code extension (optional)
+    │  native VS Code API
+    ▼
+QuickPick / InputBox / Webview dialogs
+```
+
+Without the extension, the server falls back to macOS system dialogs (osascript) or terminal readline.
+
+All data stays local — `~/.ecopilot/usage.jsonl` and `~/.ecopilot/memory.json`. Zero network egress.

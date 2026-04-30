@@ -1,0 +1,32 @@
+{
+  "name": "@ecopilot/skill-pack",
+  "version": "0.2.0",
+  "description": "EcoPilot skill-pack — drop-in copilot-instructions.md, skills, and mcp.json scaffolder",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "ecopilot-init": "./dist/bin/init.js"
+  },
+  "files": ["dist", "templates"],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "tsc --project tsconfig.json --watch",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

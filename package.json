@@ -1,0 +1,22 @@
+{
+  "name": "ecopilot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EcoPilot — GitHub Copilot premium request optimizer (monorepo root)",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter @ecopilot/mcp-server dev",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint",
+    "clean": "pnpm -r clean"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "typescript": "^5.4.0"
+  }
+}

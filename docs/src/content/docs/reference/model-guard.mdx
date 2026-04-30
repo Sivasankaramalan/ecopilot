@@ -1,0 +1,55 @@
+---
+title: Model Guard
+description: suggest_model — recommend the cheapest sufficient Copilot model tier for a given prompt.
+---
+
+## suggest_model
+
+Analyse a prompt and recommend the most cost-efficient model tier. Optionally warn when your currently selected model is overkill.
+
+```json
+{
+  "prompt": "What does the reduce() method do?",
+  "current_model": "premium"
+}
+```
+
+**Response:**
+
+```json
+{
+  "suggested_model": "mini",
+  "suggested_model_label": "GPT-4o mini  (0.33× premium quota)",
+  "cost_multiplier": 0.33,
+  "rationale": "Task is short, unambiguous, and doesn't need deep reasoning.",
+  "verbosity_score": 5,
+  "token_count": 9,
+  "mode_suggestion": "ask",
+  "warning": "You have 'premium' selected but this task only needs 'mini'. You are spending 9.1× more quota than necessary.",
+  "downgrade_saves_pct": 89
+}
+```
+
+---
+
+## Model tiers
+
+| Tier | Multiplier | Use when |
+|---|---|---|
+| `mini` | 0.33× | Short questions, renaming, typos, simple lookups |
+| `standard` | 1× | Moderate coding tasks, single-file changes |
+| `premium` | 3× | Architecture, multi-file refactors, complex debugging |
+
+---
+
+## Workflow tip
+
+Run `suggest_model` before a long agent session to confirm you have the right model selected. Combine with `tighten_prompt` — removing vague phrases often downgrades the suggestion from `premium` to `standard`.
+
+```
+tighten_prompt("Can you please just simply architect…")
+→ "Architect…"
+
+suggest_model("Architect a microservice…")
+→ suggested: premium  ✅ correct — premium task confirmed
+```

@@ -1,0 +1,85 @@
+---
+title: Quick Start
+description: Install EcoPilot in under 60 seconds and start saving Copilot premium requests immediately.
+---
+
+import { Steps, Tabs, TabItem, Aside } from '@astrojs/starlight/components';
+
+EcoPilot is a free, local-only MCP server that prevents wasted GitHub Copilot premium requests. It takes **under 60 seconds** to install.
+
+## What it solves
+
+Every time a Copilot agent asks a follow-up question in chat, it costs a **new premium request** (3× the quota of a standard request). EcoPilot routes all clarifications, confirmations, and choices through MCP tool calls instead — which cost **zero** additional requests.
+
+Layer prompt hygiene on top and most teams cut premium consumption **40–70%**.
+
+---
+
+<Steps>
+
+1. **Add EcoPilot to your VS Code MCP config**
+
+   Open `~/Library/Application Support/Code/User/mcp.json` (macOS) or `%APPDATA%\Code\User\mcp.json` (Windows) and add:
+
+   ```json
+   {
+     "mcp": {
+       "servers": {
+         "ecopilot": {
+           "command": "npx",
+           "args": ["-y", "@ecopilot/mcp-server"],
+           "type": "stdio"
+         }
+       }
+     }
+   }
+   ```
+
+   Or scaffold it automatically in your project:
+
+   ```bash
+   npx @ecopilot/skill-pack --target=.
+   ```
+
+2. **Restart VS Code** (or use *MCP: Restart Server* from the command palette)
+
+3. **Verify it's working**
+
+   Ask Copilot in agent mode:
+   ```
+   Run health_check
+   ```
+   You should see `status: "ok"` with your UI mode and PID.
+
+4. *(Optional)* **Install the VS Code extension** for native QuickPick/InputBox dialogs
+
+   Search for **EcoPilot** in the Extensions panel, or install from the Marketplace link in the sidebar.
+
+</Steps>
+
+<Aside type="tip">
+On **macOS**, EcoPilot automatically uses native system dialogs (`osascript`) as the fallback — no extension required.
+</Aside>
+
+---
+
+## 60-second demo
+
+```
+User: Can you refactor the UserController?
+
+[EcoPilot intercepts — agent calls confirm() instead of asking in chat]
+→ Dialog: "Refactor UserController — proceed?" [Yes] [No]
+
+User clicks Yes → agent continues, zero extra premium requests spent.
+```
+
+---
+
+## What's included
+
+| Package | Purpose |
+|---|---|
+| `@ecopilot/mcp-server` | 17 MCP tools — HITL, hygiene, memory, model guard |
+| `@ecopilot/skill-pack` | `npx @ecopilot/skill-pack` — drops in copilot-instructions + mcp.json |
+| `ecopilot-vscode` | Native VS Code UI + savings dashboard |

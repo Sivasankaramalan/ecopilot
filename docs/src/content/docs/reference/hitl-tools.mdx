@@ -1,0 +1,141 @@
+---
+title: Human-in-the-Loop Tools
+description: Complete reference for all HITL dialog tools — ask_user, choose_one, choose_many, multiline_input, confirm, notify, and session tools.
+---
+
+All HITL tools return zero premium requests. They pause the agent, collect user input via a dialog, and resume.
+
+---
+
+## ask_user
+
+Ask the user a question and return their text answer.
+
+```json
+{
+  "title": "Missing info",
+  "prompt": "What is the target database name?",
+  "default_value": "mydb",
+  "input_type": "text",
+  "timeout_secs": 300
+}
+```
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `title` | string | required | Dialog title |
+| `prompt` | string | required | Question to show |
+| `default_value` | string | — | Pre-filled value |
+| `input_type` | `"text"` \| `"integer"` \| `"float"` | `"text"` | Validates input type |
+| `timeout_secs` | number | config default | Auto-cancel after N seconds |
+
+**Returns:** `{ success, cancelled, value: string }`
+
+---
+
+## choose_one
+
+Present a list and let the user pick one option.
+
+```json
+{
+  "title": "Select environment",
+  "prompt": "Which environment should I deploy to?",
+  "choices": ["development", "staging", "production"]
+}
+```
+
+**Returns:** `{ success, cancelled, value: string }`
+
+---
+
+## choose_many
+
+Let the user pick multiple options from a list.
+
+```json
+{
+  "title": "Select files to refactor",
+  "prompt": "Which files should be updated?",
+  "choices": ["auth.ts", "user.ts", "api.ts"]
+}
+```
+
+**Returns:** `{ success, cancelled, values: string[] }`
+
+---
+
+## multiline_input
+
+Collect long-form text, code snippets, or detailed feedback.  
+With the VS Code extension installed, opens a full Monaco editor panel (Ctrl+Enter to submit).
+
+```json
+{
+  "title": "Describe the bug",
+  "prompt": "Paste the stack trace or describe what went wrong",
+  "default_value": ""
+}
+```
+
+**Returns:** `{ success, cancelled, value: string, character_count: number, line_count: number }`
+
+---
+
+## confirm
+
+Ask the user to confirm (yes/no) before a significant or destructive action.
+
+```json
+{
+  "title": "Confirm deletion",
+  "message": "Delete all records in the users table? This cannot be undone."
+}
+```
+
+**Returns:** `{ success, cancelled, confirmed: boolean, response: "yes" | "no" }`
+
+---
+
+## notify
+
+Send a non-blocking notification. The agent does not wait for a reply.
+
+```json
+{
+  "title": "Build complete",
+  "message": "All 42 tests passed."
+}
+```
+
+**Returns:** `{ success: true, acknowledged: true }`
+
+---
+
+## Session tools
+
+Use sessions to handle multiple questions within a **single** premium request.
+
+### start_session
+
+```json
+{ "session_id": "deploy-flow" }
+```
+
+### ask_in_session
+
+```json
+{
+  "session_id": "deploy-flow",
+  "prompt": "Which region?",
+  "choices": ["us-east-1", "eu-west-1"]
+}
+```
+
+### end_session
+
+```json
+{ "session_id": "deploy-flow" }
+```
+
+Returns `{ turn_count }` — how many questions were handled in one request.

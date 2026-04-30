@@ -1,0 +1,13 @@
+{
+  "mcp": {
+    "servers": {
+      "ecopilot": {
+        "command": "node",
+        "args": [
+          "${workspaceFolder}/packages/server/dist/index.js"
+        ],
+        "type": "stdio"
+      }
+    }
+  }
+}

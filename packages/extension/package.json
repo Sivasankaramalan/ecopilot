@@ -1,0 +1,45 @@
+{
+  "name": "ecopilot-vscode",
+  "displayName": "EcoPilot",
+  "description": "Native VS Code UI for the EcoPilot MCP server — human-in-the-loop dialogs without burning premium quota",
+  "version": "0.3.0",
+  "publisher": "ecopilot",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "ecopilot.reconnect",
+        "title": "EcoPilot: Reconnect to MCP Server"
+      },
+      {
+        "command": "ecopilot.showDashboard",
+        "title": "EcoPilot: Show Savings Dashboard"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --format=cjs --sourcemap",
+    "dev": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --platform=node --format=cjs --sourcemap --watch",
+    "check": "tsc --noEmit",
+    "package": "vsce package --no-dependencies",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@types/ws": "^8.5.10",
+    "@vscode/vsce": "^3.0.0",
+    "esbuild": "^0.21.5",
+    "typescript": "^5.4.0"
+  }
+}

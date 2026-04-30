@@ -1,0 +1,11 @@
+{
+  "mcp": {
+    "servers": {
+      "ecopilot": {
+        "command": "npx",
+        "args": ["-y", "@ecopilot/mcp-server"],
+        "type": "stdio"
+      }
+    }
+  }
+}

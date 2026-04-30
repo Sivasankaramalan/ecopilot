@@ -1,0 +1,101 @@
+---
+title: Prompt Hygiene Tools
+description: analyze_prompt, tighten_prompt, and scope_check — pure heuristics, zero LLM calls.
+---
+
+All hygiene tools are **pure heuristics** — no extra LLM calls, instant results.
+
+---
+
+## analyze_prompt
+
+Analyse a prompt before sending it. Returns token count, verbosity score, vague-phrase list, recommended model tier, and recommended mode.
+
+```json
+{
+  "prompt": "Can you please just simply help me refactor the entire UserController class?",
+  "include_scope_check": true
+}
+```
+
+**Response:**
+
+```json
+{
+  "token_count": 18,
+  "verbosity_score": 72,
+  "vague_phrases": [
+    { "phrase": "can you please", "reason": "filler opener", "suggestion": "Remove entirely — start with the verb" }
+  ],
+  "model_suggestion": "standard",
+  "model_multiplier": 1,
+  "mode_suggestion": "ask",
+  "warnings": ["1 vague phrase detected: \"can you please\""],
+  "tips": ["Removing vague phrases may save tokens — try tighten_prompt first."],
+  "scope": { "has_scope_issues": true, "overall_severity": "warning" }
+}
+```
+
+| Field | Description |
+|---|---|
+| `verbosity_score` | 0 (lean) – 100 (extremely bloated) |
+| `model_suggestion` | `mini` (0.33×) / `standard` (1×) / `premium` (3×) |
+| `mode_suggestion` | `ask` or `agent` |
+
+---
+
+## tighten_prompt
+
+Rewrite a verbose prompt into a lean verb-first imperative. Strips filler openers, trailing pleasantries, hedge words, and appends a diff hint on refactor prompts.
+
+```json
+{
+  "prompt": "I was wondering if you could possibly help me fix the bug in the user authentication flow if possible please"
+}
+```
+
+**Response:**
+
+```json
+{
+  "original": "I was wondering if you could possibly help me fix the bug in the user authentication flow if possible please",
+  "tightened": "Fix the bug in the user authentication flow",
+  "changes_made": [
+    "Removed 'I was wondering if you could'",
+    "Removed 'possibly'",
+    "Removed 'if possible'",
+    "Removed trailing 'please'"
+  ],
+  "original_tokens_estimate": 22,
+  "tightened_tokens_estimate": 9,
+  "savings_pct": 59
+}
+```
+
+---
+
+## scope_check
+
+Detect overbroad scope patterns that will trigger many agent sub-calls.
+
+```json
+{ "prompt": "Refactor the entire codebase and fix all the issues" }
+```
+
+**Response:**
+
+```json
+{
+  "has_scope_issues": true,
+  "issues": [
+    {
+      "pattern": "entire codebase",
+      "severity": "critical",
+      "reason": "Unbounded scope — will trigger 10–20 sub-calls across all files",
+      "suggestion": "Scope to a specific module: 'Refactor packages/server/src/hygiene/'"
+    }
+  ],
+  "overall_severity": "critical",
+  "recommendation": "Narrow the scope before proceeding. Critical issues will likely cause runaway agent loops."
+}
+```

@@ -1,0 +1,27 @@
+---
+title: EcoPilot
+description: Stop burning Copilot premium requests. Human-in-the-loop MCP tools + prompt hygiene for VS Code.
+template: splash
+hero:
+  tagline: Stop burning Copilot premium requests. Ask the user, not the model.
+  actions:
+    - text: Quick Start
+      link: /guides/quickstart/
+      icon: right-arrow
+      variant: primary
+    - text: How it works
+      link: /guides/how-it-works/
+      icon: external
+---
+
+## What EcoPilot does
+
+EcoPilot is an MCP server that sits between your AI agent and the user. When the agent needs input, it calls a tool — no extra premium requests.
+
+| Without EcoPilot | With EcoPilot |
+|---|---|
+| Agent asks follow-up → 1 premium request | `ask_user` → 0 premium requests |
+| Verbose prompt → extra tokens | `tighten_prompt` → up to 60% fewer tokens |
+| Wrong model selected | `suggest_model` → use mini or standard |
+
+[Get started in 60 seconds →](/guides/quickstart/)

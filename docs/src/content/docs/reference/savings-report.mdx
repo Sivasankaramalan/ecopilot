@@ -1,0 +1,68 @@
+---
+title: Savings Report
+description: get_savings_report — view your personal token savings dashboard.
+---
+
+## get_savings_report
+
+Returns aggregated token savings from `~/.ecopilot/usage.jsonl`. No arguments needed.
+
+**Response:**
+
+```json
+{
+  "today": {
+    "prompts_analyzed": 3,
+    "prompts_tightened": 5,
+    "tokens_saved": 284,
+    "weighted_savings": 284
+  },
+  "week": {
+    "prompts_analyzed": 18,
+    "prompts_tightened": 31,
+    "tokens_saved": 1840,
+    "weighted_savings": 2760
+  },
+  "all_time": {
+    "prompts_analyzed": 92,
+    "prompts_tightened": 147,
+    "tokens_saved": 9420,
+    "weighted_savings": 14130
+  },
+  "by_model_tier": {
+    "mini": 120,
+    "standard": 4500,
+    "premium": 9510
+  },
+  "log_path": "/Users/you/.ecopilot/usage.jsonl"
+}
+```
+
+---
+
+## VS Code Dashboard
+
+If you have the **EcoPilot VS Code extension** installed, click the status bar item or run `EcoPilot: Show Savings Dashboard` to see:
+
+- Cards for today / this week / all-time
+- A 30-day bar chart of daily token savings
+- Model tier breakdown table
+- Refresh button (live updates from the log file)
+
+---
+
+## weighted_savings explained
+
+`weighted_savings = tokens_saved × model_multiplier`
+
+If you saved 100 tokens on a prompt that was going to use `premium` (3×), that's 300 weighted token-equivalents — reflecting the true quota cost you avoided.
+
+---
+
+## Raw log format
+
+Each line in `~/.ecopilot/usage.jsonl`:
+
+```json
+{"ts":"2026-04-30T10:00:00.000Z","tool":"tighten_prompt","tokens_in":94,"tokens_out":12,"tokens_saved":82,"model_suggestion":"standard","model_multiplier":1,"weighted_savings":82}
+```

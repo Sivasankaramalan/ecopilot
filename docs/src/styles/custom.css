@@ -1,0 +1,6 @@
+/* EcoPilot custom styles for Starlight */
+:root {
+  --sl-color-accent-low: #1a2e1a;
+  --sl-color-accent: #22c55e;
+  --sl-color-accent-high: #86efac;
+}
